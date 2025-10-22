@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Análisis Estadístico - Encuesta Energía Hogares Rurales 2010</title>
+
+  <!-- Fuentes y Bootstrap -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header bg-white shadow-sm">
+    <div class="container py-3 d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="site-title">Análisis Estadístico Inferencial de la Encuesta Nacional de Energía en Hogares Rurales 2010</h1>
+        <p class="subtitle mb-0">Aplicación de técnicas descriptivas e inferenciales a 6,690 hogares peruanos</p>
+      </div>
+      <div class="text-end text-muted small">
+        <div><strong>Autor:</strong> Kenji Apaza Mollinedo</div>
+        <div>Estadística Aplicada — 2018</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-transparent border-top border-bottom">
+    <div class="container">
+      <div class="collapse navbar-collapse show">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" href="#introduccion">Introducción</a></li>
+          <li class="nav-item"><a class="nav-link" href="#base-datos">Base de datos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#resultados">Resultados</a></li>
+          <li class="nav-item"><a class="nav-link" href="#interpretacion">Interpretación</a></li>
+          <li class="nav-item"><a class="nav-link" href="#conclusiones">Conclusiones</a></li>
+          <li class="nav-item"><a class="nav-link" href="#creditos">Créditos</a></li>
+        </ul>
+        <div>
+          <button id="download-csv" class="btn btn-outline-primary btn-sm">Descargar datos sintéticos (CSV)</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-4">
+    <!-- Introducción -->
+    <section id="introduccion" class="mb-5 card p-4">
+      <h2 class="section-title">Introducción</h2>
+      <p class="lead">
+        Este estudio busca comprender los patrones de consumo energético en hogares rurales del Perú, utilizando datos de una muestra de 6,690 hogares.
+        Se aplican herramientas de estadística descriptiva e inferencial para identificar características socioeconómicas, hábitos de consumo, acceso a la energía y condiciones de vivienda.
+      </p>
+    </section>
+
+    <!-- Base de datos y variables -->
+    <section id="base-datos" class="mb-5 card p-4">
+      <h2 class="section-title">Base de datos y variables</h2>
+
+      <p>El conjunto de datos simulado contiene 6,690 observaciones y 20 variables: 10 cuantitativas continuas y 10 cualitativas nominales.</p>
+
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Variables cuantitativas continuas</h5>
+          <ul>
+            <li>gasto_mensual_total</li>
+            <li>gasto_energetico</li>
+            <li>consumo_kwh</li>
+            <li>horas_servicio_electrico</li>
+            <li>minutos_estudio_nocturno</li>
+            <li>ingreso_mensual</li>
+            <li>costo_kwh</li>
+            <li>distancia_centro</li>
+            <li>horas_uso_aparatos</li>
+            <li>edad_jefe_hogar</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h5>Variables cualitativas nominales</h5>
+          <ul>
+            <li>region</li>
+            <li>tipo_iluminacion</li>
+            <li>combustible</li>
+            <li>acceso_red</li>
+            <li>sistema_solar</li>
+            <li>electrodomestico_principal</li>
+            <li>estado_civil</li>
+            <li>nivel_educativo</li>
+            <li>sexo_jefe</li>
+            <li>material_vivienda</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="mt-3 text-muted fst-italic">
+        Estas variables permiten analizar tanto aspectos económicos y de consumo (cuantitativos), como características sociales y tecnológicas (cualitativas) de los hogares rurales del país.
+      </p>
+    </section>
+
+    <!-- Resultados estadísticos -->
+    <section id="resultados" class="mb-5 card p-4">
+      <h2 class="section-title">Resultados estadísticos</h2>
+
+      <h5 class="mt-3">A. Medidas de tendencia y dispersión (variables continuas)</h5>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered table-sm" id="tabla-medidas">
+          <thead class="table-light">
+            <tr>
+              <th>Variable</th>
+              <th>Media (μ)</th>
+              <th>Sigma (σ)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- llenado desde JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="mt-3">B. Medidas de frecuencia (variables nominales)</h5>
+      <div id="frecuencias" class="row gy-3">
+        <!-- tarjetas con modas y % generadas desde JS -->
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100 p-3">
+            <h6>Histograma — Consumo mensual (kWh)</h6>
+            <canvas id="hist-consumo"></canvas>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100 p-3">
+            <h6>Boxplot aproximado — Ingreso mensual</h6>
+            <canvas id="box-ingreso"></canvas>
+            <small class="text-muted">Gráfico representado como box-simulado (mediana y cuartiles estimados)</small>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100 p-3">
+            <h6>Distribución — Tipo de combustible</h6>
+            <canvas id="pie-combustible"></canvas>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100 p-3">
+            <h6>Comparativo media (μ) y sigma (σ)</h6>
+            <canvas id="bar-stats"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interpretación -->
+    <section id="interpretacion" class="mb-5 card p-4">
+      <h2 class="section-title">Interpretación de los resultados</h2>
+      <p>
+        Los resultados muestran que la mayoría de hogares rurales del Perú aún dependen de fuentes tradicionales de energía como la leña y el querosén.
+        El acceso a electricidad de red se mantiene limitado (39%), y solo un 0.8% cuenta con sistemas solares domiciliarios.
+      </p>
+      <p>
+        En cuanto a educación y condiciones sociales, predominan hogares con jefes varones, de nivel educativo básico y viviendas de materiales rústicos.
+        Las medias de ingreso y gasto reflejan una economía doméstica restringida, aunque con diferencias notorias entre regiones.
+      </p>
+      <p class="fst-italic">
+        Este análisis evidencia la necesidad de políticas públicas que amplíen el acceso energético y mejoren las condiciones de vida en el ámbito rural.
+      </p>
+    </section>
+
+    <!-- Conclusiones -->
+    <section id="conclusiones" class="mb-5 card p-4">
+      <h2 class="section-title">Conclusiones finales</h2>
+      <ol>
+        <li>La energía eléctrica aún no llega de forma equitativa a los hogares rurales peruanos.</li>
+        <li>Los combustibles tradicionales (leña y querosén) siguen siendo predominantes.</li>
+        <li>Las condiciones educativas y materiales de vivienda influyen en el tipo de energía utilizada.</li>
+        <li>Se requiere fortalecer programas de electrificación rural y energías renovables sostenibles.</li>
+      </ol>
+    </section>
+
+    <!-- Créditos -->
+    <section id="creditos" class="mb-5 card p-4">
+      <h2 class="section-title">Créditos / Referencias</h2>
+      <p>
+        Fuente de datos: Encuesta Nacional de Consumo de Energía en Hogares Rurales (2010), Ministerio de Energía y Minas del Perú.<br>
+        Elaboración propia con datos sintéticos y análisis inferencial – 2025.
+      </p>
+      <p class="small text-muted">Repositorio y archivos ya incluyen un dataset sintético generado para reproducir las tablas y gráficos. Los datos reales deben integrarse sustituyendo el archivo de datos.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer bg-white border-top py-3">
+    <div class="container text-center text-muted small">
+      © 2025 — Kenji Apaza Mollinedo — Elaboración y análisis estadístico
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
