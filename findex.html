@@ -1,0 +1,267 @@
+// app.js - Generador de datos sintéticos y renderizado de la página
+// El contenido numérico base (medias y sigmas) proviene del archivo original provisto.
+
+(() => {
+  // Parámetros conocidos (media y sigma) según el archivo recibido
+  const CONTINUAS = [
+    { id: 'gasto_mensual_total', label: 'Gasto mensual total', mu: 500.18, sigma: 196.43, min: 0 },
+    { id: 'gasto_energetico', label: 'Gasto en energía', mu: 25.04, sigma: 9.94, min: 0 },
+    { id: 'consumo_kwh', label: 'Consumo mensual (kWh)', mu: 27.90, sigma: 17.06, min: 0 },
+    { id: 'horas_servicio_electrico', label: 'Horas de servicio eléctrico', mu: 9.00, sigma: 3.90, min: 0, max: 24 },
+    { id: 'minutos_estudio_nocturno', label: 'Minutos de estudio nocturno', mu: 59.74, sigma: 20.19, min: 0, max: 300 },
+    { id: 'ingreso_mensual', label: 'Ingreso mensual', mu: 2120.74, sigma: 919.51, min: 0 },
+    { id: 'costo_kwh', label: 'Costo kWh', mu: 0.603, sigma: 0.099, min: 0.05 },
+    { id: 'distancia_centro', label: 'Distancia al centro urbano (km)', mu: 19.93, sigma: 19.91, min: 0 },
+    { id: 'horas_uso_aparatos', label: 'Horas de uso de aparatos', mu: 2.07, sigma: 1.39, min: 0 },
+    { id: 'edad_jefe_hogar', label: 'Edad del jefe de hogar', mu: 53.61, sigma: 20.75, min: 15, max: 100 }
+  ];
+
+  // Frecuencias aproximadas para categoricas (según archivo)
+  const CATEGORICAS = {
+    region: { labels: ['Andina Central', 'Costa', 'Selva', 'Andina Norte', 'Andina Sur', 'Lima/Callao'], probs: [0.25, 0.18, 0.15, 0.14, 0.12, 0.16] },
+    tipo_iluminacion: { labels: ['Electricidad de red', 'Kerosén', 'Velas', 'Generador', 'Otras'], probs: [0.478, 0.32, 0.12, 0.06, 0.022] },
+    combustible: { labels: ['Leña', 'Gas propano', 'Kerosén', 'Carbón', 'Electricidad'], probs: [0.598, 0.18, 0.15, 0.03, 0.002] },
+    acceso_red: { labels: ['No', 'Sí'], probs: [0.61, 0.39] },
+    sistema_solar: { labels: ['No', 'Sí'], probs: [0.992, 0.008] },
+    electrodomestico_principal: { labels: ['Radio', 'Televisor', 'Nevera', 'Luces', 'Ninguno'], probs: [0.359, 0.25, 0.05, 0.25, 0.091] },
+    estado_civil: { labels: ['Casado', 'Soltero', 'Viudo', 'Divorciado'], probs: [0.58, 0.25, 0.1, 0.07] },
+    nivel_educativo: { labels: ['Primaria completa', 'Secundaria completa', 'Sin educación', 'Superior'], probs: [0.28, 0.28, 0.25, 0.19] },
+    sexo_jefe: { labels: ['Masculino', 'Femenino'], probs: [0.72, 0.28] },
+    material_vivienda: { labels: ['Ladrillo', 'Adobe', 'Material rústico', 'Metal'], probs: [0.35, 0.30, 0.25, 0.10] }
+  };
+
+  const N = 6690;
+
+  // Generador normal (Box-Muller)
+  function randn_bm() {
+    let u = 0, v = 0;
+    while(u === 0) u = Math.random();
+    while(v === 0) v = Math.random();
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+  }
+
+  // Genera vector normal con recorte
+  function genNormal(mu, sigma, n = N, min = -Infinity, max = Infinity) {
+    const arr = new Array(n);
+    for (let i = 0; i < n; i++) {
+      let val = mu + sigma * randn_bm();
+      if (!isFinite(val) || Number.isNaN(val)) val = mu;
+      if (min !== undefined && val < min) val = min + Math.abs(randn_bm()) * (sigma/4);
+      if (max !== undefined && val > max) val = max - Math.abs(randn_bm()) * (sigma/4);
+      arr[i] = val;
+    }
+    return arr;
+  }
+
+  // Muestra categórica según probabilidades
+  function sampleCategorical(labels, probs, n = N) {
+    const cum = [];
+    probs.reduce((acc, p, i) => (cum[i] = acc + p, acc + p), 0);
+    const out = new Array(n);
+    for (let i = 0; i < n; i++) {
+      const r = Math.random();
+      const idx = cum.findIndex(c => r <= c);
+      out[i] = labels[idx === -1 ? labels.length - 1 : idx];
+    }
+    return out;
+  }
+
+  // Generar dataset sintético
+  function generarDataset() {
+    const ds = [];
+    // pre-generar continuas
+    const contArrays = {};
+    CONTINUAS.forEach(v => {
+      contArrays[v.id] = genNormal(v.mu, v.sigma, N, v.min, v.max);
+    });
+    // pre-generar categoricas
+    const catArrays = {};
+    for (const k in CATEGORICAS) {
+      catArrays[k] = sampleCategorical(CATEGORICAS[k].labels, CATEGORICAS[k].probs, N);
+    }
+    for (let i = 0; i < N; i++) {
+      const row = {};
+      CONTINUAS.forEach(v => {
+        const val = contArrays[v.id][i];
+        // redondeos apropiados
+        row[v.id] = (v.id === 'costo_kwh') ? Number(val.toFixed(3))
+                       : (v.id === 'edad_jefe_hogar' ? Math.round(val) : Number(val.toFixed(2)));
+      });
+      for (const k in CATEGORICAS) row[k] = catArrays[k][i];
+      ds.push(row);
+    }
+    return ds;
+  }
+
+  // Estadísticas simples
+  function mean(arr) { return arr.reduce((a,b)=>a+b,0)/arr.length; }
+  function sd(arr, mu) {
+    mu = mu === undefined ? mean(arr) : mu;
+    const v = arr.reduce((s, x) => s + (x - mu)**2, 0) / (arr.length - 1);
+    return Math.sqrt(v);
+  }
+  function quantile(arr, q) {
+    const a = Array.from(arr).sort((x,y)=>x-y);
+    const pos = (a.length - 1) * q;
+    const base = Math.floor(pos);
+    const rest = pos - base;
+    if (a[base + 1] !== undefined) return a[base] + rest * (a[base + 1] - a[base]);
+    return a[base];
+  }
+
+  // Render tabla de medidas (usa las medias y sigma dadas como referencia)
+  function renderTablaMedidas(dataset) {
+    const tbody = document.querySelector('#tabla-medidas tbody');
+    tbody.innerHTML = '';
+    CONTINUAS.forEach(v => {
+      const arr = dataset.map(r => Number(r[v.id]));
+      const mu = Number(mean(arr).toFixed(2));
+      const s = Number(sd(arr, mu).toFixed(2));
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${v.label}</td><td>${mu}</td><td>${s}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Render frecuencias (mostramos moda y porcentaje para cada categórica relevante)
+  function renderFrecuencias(dataset) {
+    const cont = document.getElementById('frecuencias');
+    cont.innerHTML = '';
+    Object.keys(CATEGORICAS).forEach(key => {
+      const counts = {};
+      dataset.forEach(r => counts[r[key]] = (counts[r[key]]||0)+1);
+      const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+      const moda = entries[0][0];
+      const pct = ((entries[0][1] / dataset.length) * 100).toFixed(1);
+      const card = document.createElement('div');
+      card.className = 'col-md-6 col-lg-4';
+      card.innerHTML = `
+        <div class="p-3 h-100 card">
+          <h6 class="mb-1">${key.replace(/_/g,' ')}</h6>
+          <div class="small text-muted mb-2">Moda: <strong>${moda}</strong></div>
+          <div>Proporción: <strong>${pct}%</strong></div>
+        </div>
+      `;
+      cont.appendChild(card);
+    });
+  }
+
+  // Crear histograma sencillo
+  function histogramData(values, bins = 20) {
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const width = (max - min) / bins;
+    const counts = new Array(bins).fill(0);
+    const labels = new Array(bins);
+    for (let i = 0; i < bins; i++) {
+      labels[i] = `${(min + i*width).toFixed(1)} - ${(min + (i+1)*width).toFixed(1)}`;
+    }
+    values.forEach(v => {
+      let idx = Math.floor((v - min) / width);
+      if (idx < 0) idx = 0;
+      if (idx >= bins) idx = bins - 1;
+      counts[idx]++;
+    });
+    return { labels, counts };
+  }
+
+  // Graficar con Chart.js
+  function crearCharts(dataset) {
+    // Histograma consumo_kwh
+    const consumo = dataset.map(r => r.consumo_kwh);
+    const hist = histogramData(consumo, 25);
+    const ctxH = document.getElementById('hist-consumo').getContext('2d');
+    new Chart(ctxH, {
+      type: 'bar',
+      data: { labels: hist.labels, datasets: [{ label: 'Frecuencia', data: hist.counts, backgroundColor: '#0d6efd' }] },
+      options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 60, minRotation: 60 } } } }
+    });
+
+    // Boxplot aproximado para ingreso (representado con min, Q1, mediana, Q3, max como dataset de líneas y barras)
+    const ingreso = dataset.map(r => r.ingreso_mensual);
+    const q1 = quantile(ingreso, 0.25);
+    const q2 = quantile(ingreso, 0.5);
+    const q3 = quantile(ingreso, 0.75);
+    const min = Math.min(...ingreso);
+    const max = Math.max(...ingreso);
+    const ctxB = document.getElementById('box-ingreso').getContext('2d');
+    new Chart(ctxB, {
+      type: 'bar',
+      data: {
+        labels: ['Ingresos'],
+        datasets: [
+          { label: 'Rango (mín-max)', data: [max - min], backgroundColor: '#e9f2ff' },
+          { label: 'Cuartil (Q1-Q3)', data: [q3 - q1], backgroundColor: '#cfe0ff' },
+          { label: 'Mediana', data: [q2], type: 'line', borderColor: '#0d6efd', borderWidth: 2, pointRadius: 5, fill: false }
+        ]
+      },
+      options: { plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // Pie combustible
+    const countsComb = {};
+    dataset.forEach(r => countsComb[r.combustible] = (countsComb[r.combustible]||0)+1);
+    const labelsComb = Object.keys(countsComb);
+    const dataComb = labelsComb.map(l => countsComb[l]);
+    const ctxP = document.getElementById('pie-combustible').getContext('2d');
+    new Chart(ctxP, {
+      type: 'doughnut',
+      data: { labels: labelsComb, datasets: [{ data: dataComb, backgroundColor: ['#0d6efd','#198754','#ffc107','#fd7e14','#6c757d'] }] },
+      options: { plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // Comparativo media y sigma
+    const labelsStats = CONTINUAS.map(v => v.label);
+    const medias = CONTINUAS.map(v => Number(mean(dataset.map(r => r[v.id])).toFixed(2)));
+    const sigmas = CONTINUAS.map(v => Number(sd(dataset.map(r => r[v.id]), mean(dataset.map(r => r[v.id]))).toFixed(2)));
+    const ctxS = document.getElementById('bar-stats').getContext('2d');
+    new Chart(ctxS, {
+      type: 'bar',
+      data: {
+        labels: labelsStats,
+        datasets: [
+          { label: 'Media (μ)', data: medias, backgroundColor: '#0d6efd' },
+          { label: 'Sigma (σ)', data: sigmas, backgroundColor: '#6c757d' }
+        ]
+      },
+      options: { plugins: { legend: { position: 'bottom' } }, responsive: true, scales: { x: { ticks: { display: false } }, y: { beginAtZero: true } } }
+    });
+  }
+
+  // Exportar dataset a CSV y disparar descarga
+  function downloadCSV(dataset) {
+    const keys = Object.keys(dataset[0]);
+    const csvRows = [keys.join(',')];
+    dataset.forEach(r => {
+      const row = keys.map(k => {
+        const v = r[k];
+        if (typeof v === 'string' && v.includes(',')) return `"${v}"`;
+        return v;
+      }).join(',');
+      csvRows.push(row);
+    });
+    const csv = csvRows.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'encuesta_energia_hogares_rurales_2010_sintetico.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Inicialización
+  function init() {
+    const ds = generarDataset();
+    renderTablaMedidas(ds);
+    renderFrecuencias(ds);
+    crearCharts(ds);
+
+    document.getElementById('download-csv').addEventListener('click', () => downloadCSV(ds));
+  }
+
+  // Run
+  document.addEventListener('DOMContentLoaded', init);
+})();
