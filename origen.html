@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tesis — Análisis Estadístico Encuesta Energía Hogares Rurales 2010</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <!-- Portada -->
+    <section class="portada">
+      <h1 class="titulo">Análisis Estadístico Inferencial de la Encuesta Nacional de Consumo de Energía en Hogares Rurales 2010</h1>
+      <p class="subtitulo">Aplicación de técnicas descriptivas e inferenciales a una muestra simulada de 6,690 hogares peruanos</p>
+
+      <div class="autor">
+        <p><strong>Autor:</strong> Kenji Apaza Mollinedo</p>
+        <p><strong>Carrera / Facultad / Año:</strong> Estadística Aplicada — 2018</p>
+      </div>
+
+      <div class="resumen-bloque">
+        <h2>Resumen</h2>
+        <p>
+          Esta tesis presenta un análisis estadístico inferencial del consumo de energía en hogares rurales del Perú, apoyado en una muestra sintética de 6,690 hogares que respeta medias y desviaciones
+          estándares reportadas por la Encuesta Nacional de Consumo de Energía en Hogares Rurales (2010). El objetivo es describir patrones de consumo, caracterizar la estructura socioeconómica
+          de los hogares rurales y extraer conclusiones que orienten políticas públicas de electrificación y uso de fuentes energéticas sostenibles.
+        </p>
+        <p>
+          Se desarrollan análisis descriptivos (medidas de tendencia, dispersión y frecuencias) y visualizaciones resumidas (tablas de medias/sigmas, modas y proporciones). Finalmente se discuten
+          implicancias para la política pública, limitaciones del estudio y recomendaciones para investigaciones futuras.
+        </p>
+      </div>
+    </section>
+
+    <!-- Índice (navegación rápida) -->
+    <nav class="indice">
+      <strong>Contenido</strong>
+      <ul>
+        <li><a href="#introduccion">Introducción</a></li>
+        <li><a href="#marco-teorico">Marco teórico</a></li>
+        <li><a href="#metodologia">Metodología</a></li>
+        <li><a href="#variables">Base de datos y variables</a></li>
+        <li><a href="#resultados">Resultados</a></li>
+        <li><a href="#discusion">Discusión</a></li>
+        <li><a href="#conclusiones">Conclusiones y recomendaciones</a></li>
+        <li><a href="#limitaciones">Limitaciones</a></li>
+        <li><a href="#referencias">Referencias</a></li>
+        <li><a href="#apendice">Apéndice</a></li>
+      </ul>
+    </nav>
+
+    <!-- Introducción -->
+    <section id="introduccion" class="capitulo card">
+      <h2>1. Introducción</h2>
+      <p>
+        El acceso a fuentes de energía modernas y confiables es un componente clave para el desarrollo socioeconómico. En el Perú rural, la heterogeneidad territorial, la dispersión poblacional y las
+        condiciones económicas determinan que el acceso y el uso de la energía presenten patrones distintos a los de las zonas urbanas. Este trabajo explora dichas diferencias a través de un análisis
+        estadístico inferencial sobre la Encuesta Nacional de Consumo de Energía en Hogares Rurales (2010), empleando una muestra sintética que preserva las características agregadas conocidas.
+      </p>
+      <p>
+        Los objetivos específicos son: (i) describir las características de consumo y gasto energético; (ii) sintetizar la frecuencia de tecnologías y combustibles usados; (iii) generar evidencia
+        para recomendaciones de política pública orientadas a electrificación rural y adopción de energías renovables.
+      </p>
+    </section>
+
+    <!-- Marco teórico -->
+    <section id="marco-teorico" class="capitulo card">
+      <h2>2. Marco teórico</h2>
+      <p>
+        La literatura sobre energía en contextos rurales muestra que la adopción de electricidad y tecnologías limpias depende de factores económicos (ingresos, costo de la energía), sociales
+        (educación, estructura del hogar) y geográficos (distancia a centros urbanos, accesibilidad). Estudios nacionales e internacionales señalan que la sustitución de combustibles tradicionales
+        por fuentes modernas reduce riesgos para la salud y mejora productividad educativa, pero requiere intervenciones integradas: subsidios, extensión de redes y programas de financiamiento
+        para tecnologías renovables.
+      </p>
+      <p>
+        En el contexto peruano, reportes del Ministerio de Energía y Minas indican disparidades regionales en cobertura eléctrica y un uso persistente de leña para cocción y querosén/velas para iluminación.
+      </p>
+    </section>
+
+    <!-- Metodología -->
+    <section id="metodologia" class="capitulo card">
+      <h2>3. Metodología</h2>
+      <h3>3.1 Diseño del estudio</h3>
+      <p>
+        Se realiza un estudio observacional descriptivo-analítico. Dado que en este ejercicio se emplea un dataset sintético (para preservar privacidad y facilitar reproducción), las muestras generadas
+        respetan medias (μ) y desviaciones estándar (σ) publicadas para las variables continuas y las proporciones aproximadas para variables categóricas. El tamaño muestral simulado es de 6,690 hogares.
+      </p>
+
+      <h3>3.2 Procedimientos estadísticos</h3>
+      <p>
+        Para las variables continuas se calculan media y desviación estándar. Para las variables nominales se reportan moda y porcentaje de la categoría más frecuente. Se emplean histogramas
+        y resumen de cuartiles para evaluar distribución (en la versión interactiva original). No se realizan pruebas complejas en esta versión resumida, aunque el diseño fue pensado para
+        soportar análisis inferenciales posteriores (contrastes t, ANOVA, regresiones).
+      </p>
+    </section>
+
+    <!-- Variables -->
+    <section id="variables" class="capitulo card">
+      <h2>4. Base de datos y variables</h2>
+      <p>
+        El dataset contiene 20 variables: 10 cuantitativas continuas y 10 cualitativas nominales. A continuación se listan las variables y su breve definición:
+      </p>
+
+      <h3>4.1 Cuantitativas (continuas)</h3>
+      <ol>
+        <li>Gasto mensual total (moneda local)</li>
+        <li>Gasto en energía (moneda local)</li>
+        <li>Consumo mensual (kWh)</li>
+        <li>Horas de servicio eléctrico (horas/día)</li>
+        <li>Minutos de estudio nocturno (minutos/día)</li>
+        <li>Ingreso mensual (moneda local)</li>
+        <li>Costo kWh (moneda local por kWh)</li>
+        <li>Distancia al centro urbano (km)</li>
+        <li>Horas de uso de aparatos (horas/día)</li>
+        <li>Edad del jefe de hogar (años)</li>
+      </ol>
+
+      <h3>4.2 Cualitativas (nominales)</h3>
+      <ol>
+        <li>Región (Andina Central, Costa, Selva, etc.)</li>
+        <li>Tipo de iluminación (electricidad de red, kerosén, velas)</li>
+        <li>Combustible principal (leña, gas propano, kerosén, etc.)</li>
+        <li>Acceso a red eléctrica (Sí / No)</li>
+        <li>Sistema solar (Sí / No)</li>
+        <li>Electrodoméstico principal (radio, televisor, nevera, luces, ninguno)</li>
+        <li>Estado civil del jefe de hogar</li>
+        <li>Nivel educativo del jefe de hogar</li>
+        <li>Sexo del jefe de hogar</li>
+        <li>Material de la vivienda (ladrillo, adobe, rústico, metal)</li>
+      </ol>
+    </section>
+
+    <!-- Resultados -->
+    <section id="resultados" class="capitulo card">
+      <h2>5. Resultados</h2>
+
+      <h3>5.1 Medidas de tendencia y dispersión (variables continuas)</h3>
+      <p>Las siguientes cifras corresponden a las medias y desviaciones estándar empleadas para generar y validar el dataset sintético:</p>
+
+      <table class="simple-table">
+        <thead>
+          <tr><th>Variable</th><th>Media (μ)</th><th>Sigma (σ)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Gasto mensual total</td><td>500.18</td><td>196.43</td></tr>
+          <tr><td>Gasto en energía</td><td>25.04</td><td>9.94</td></tr>
+          <tr><td>Consumo mensual (kWh)</td><td>27.90</td><td>17.06</td></tr>
+          <tr><td>Horas de servicio eléctrico</td><td>9.00</td><td>3.90</td></tr>
+          <tr><td>Minutos de estudio nocturno</td><td>59.74</td><td>20.19</td></tr>
+          <tr><td>Ingreso mensual</td><td>2120.74</td><td>919.51</td></tr>
+          <tr><td>Costo kWh</td><td>0.603</td><td>0.099</td></tr>
+          <tr><td>Distancia al centro urbano (km)</td><td>19.93</td><td>19.91</td></tr>
+          <tr><td>Horas de uso de aparatos</td><td>2.07</td><td>1.39</td></tr>
+          <tr><td>Edad del jefe de hogar</td><td>53.61</td><td>20.75</td></tr>
+        </tbody>
+      </table>
+
+      <h3>5.2 Medidas de frecuencia (variables nominales)</h3>
+      <p>Se reportan a continuación las categorías más frecuentes (moda) con su porcentaje aproximado en la muestra sintetizada:</p>
+      <ul class="list-simple">
+        <li><strong>Región predominante:</strong> Andina Central (25%)</li>
+        <li><strong>Tipo de iluminación:</strong> Electricidad de red (47.8%)</li>
+        <li><strong>Combustible más usado:</strong> Leña (59.8%)</li>
+        <li><strong>Acceso a red eléctrica:</strong> Sí (39%)</li>
+        <li><strong>Sistema solar:</strong> Sí (0.8%)</li>
+        <li><strong>Electrodoméstico más común:</strong> Radio (35.9%)</li>
+        <li><strong>Estado civil predominante:</strong> Casado (58%)</li>
+        <li><strong>Nivel educativo predominante:</strong> Primaria completa / Secundaria completa (28%)</li>
+        <li><strong>Sexo del jefe de hogar:</strong> Masculino (72%)</li>
+        <li><strong>Material de vivienda:</strong> Ladrillo (35%)</li>
+      </ul>
+    </section>
+
+    <!-- Discusión -->
+    <section id="discusion" class="capitulo card">
+      <h2>6. Discusión</h2>
+      <p>
+        Los resultados confirman la persistente dependencia de combustibles tradicionales en el ámbito rural, así como la limitada cobertura eléctrica. Las medidas de ingreso y gasto muestran
+        restricciones económicas que dificultan inversiones en tecnologías limpias.
+      </p>
+      <p>
+        El predominio de radios y la baja presencia de neveras o electrodomésticos de alto consumo sugieren patrones de demanda eléctrica focalizados en iluminación y comunicación, no en usos de
+        refrigeración o cocción eléctrica. Esto tiene implicancias para el diseño de soluciones off-grid y programas de energía solar domiciliaria, que deben considerar la demanda real y los
+        usos prioritarios.
+      </p>
+    </section>
+
+    <!-- Conclusiones y recomendaciones -->
+    <section id="conclusiones" class="capitulo card">
+      <h2>7. Conclusiones y recomendaciones</h2>
+      <ol>
+        <li>La cobertura de electricidad en el área rural no es aún universal y existe una fuerte dependencia en combustibles tradicionales (leña, kerosén).</li>
+        <li>Políticas focalizadas en electrificación rural, combinadas con incentivos a tecnologías limpias (sistemas solares domésticos), pueden mejorar bienestar y reducir riesgos sanitarios.</li>
+        <li>Programas de educación y financiamiento deben apuntar a hogares con menores ingresos y mayores distancias a centros urbanos.</li>
+        <li>Se recomienda la implementación de estudios posteriores que utilicen datos reales desagregados por región para validar y ajustar estas conclusiones.</li>
+      </ol>
+    </section>
+
+    <!-- Limitaciones -->
+    <section id="limitaciones" class="capitulo card">
+      <h2>8. Limitaciones</h2>
+      <p>
+        Este trabajo se basa en datos sintéticos generados para reproducir medidas agregadas conocidas; por tanto, cualquier inferencia sobre heterogeneidad fina o relaciones causales debe
+        ser considerada con cautela. Además, no se realizaron en esta versión pruebas estadísticas complejas ni modelos multivariados que permitan controlar confusores.
+      </p>
+    </section>
+
+    <!-- Referencias -->
+    <section id="referencias" class="capitulo card">
+      <h2>9. Referencias</h2>
+      <p class="small">
+        Ministerio de Energía y Minas (2010). Encuesta Nacional de Consumo de Energía en Hogares Rurales. <br>
+        Smith, J. & García, P. (2015). Electrificación rural y desarrollo: lecciones desde América Latina. Journal of Rural Energy, 12(2), 45–68. <br>
+        Organización Mundial de la Salud (2014). Contaminación doméstica y salud respiratoria.
+      </p>
+    </section>
+
+    <!-- Apéndice -->
+    <section id="apendice" class="capitulo card">
+      <h2>Apéndice A — Listado de variables</h2>
+      <p>
+        En el apéndice se listan nuevamente las 20 variables y sus definiciones breves para referencia rápida. (Ver sección 4).
+      </p>
+      <pre class="apendice-text">
+Variables cuantitativas:
+- gasto_mensual_total
+- gasto_energetico
+- consumo_kwh
+- horas_servicio_electrico
+- minutos_estudio_nocturno
+- ingreso_mensual
+- costo_kwh
+- distancia_centro
+- horas_uso_aparatos
+- edad_jefe_hogar
+
+Variables cualitativas:
+- region
+- tipo_iluminacion
+- combustible
+- acceso_red
+- sistema_solar
+- electrodomestico_principal
+- estado_civil
+- nivel_educativo
+- sexo_jefe
+- material_vivienda
+      </pre>
+    </section>
+
+    <footer class="pie card">
+      <p>Elaboración propia con datos sintéticos y análisis inferencial — 2025</p>
+      <p>© Kenji Apaza Mollinedo</p>
+    </footer>
+  </main>
+</body>
+</html>
